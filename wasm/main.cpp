@@ -522,7 +522,7 @@ bool TouchStartGameInput()
     cout << "gesture: " << gesture << endl;
     cout << "touch pos x: " << touchPosition.x<<"    "<< "touch pos y: " << touchPosition.y << endl;
 
-    if (gesture == GESTURE_DOUBLETAP && touchPosition.x > 0 && touchPosition.y > 0)
+    if (gesture == GESTURE_TAP && touchPosition.x > 0 && touchPosition.y > 0)
     {
         touchStartGameInput = touchPosition.x > 0 && touchPosition.x < WIDTH && touchPosition.y > 0 && touchPosition.y < HEIGHT;
     }
