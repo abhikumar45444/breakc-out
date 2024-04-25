@@ -201,6 +201,10 @@ int main()
 // #include <dirent.h>
 #include "../include/raymath.h"
 
+#if defined(PLATFORM_WEB)
+#include <emscripten/emscripten.h>
+#endif
+
 using namespace std;
 
 #define TILESROW 5
@@ -453,29 +457,45 @@ int main()
     const char *filename = "../resources/font.ttf";
     font = LoadFontEx(filename, 50, 0, 250);
 
-    //* set Frames per second
-    const int FPS = 60;
-    SetTargetFPS(FPS);
+    #if defined(PLATFORM_WEB)
+        const int FPS = 60;
+        SetTargetFPS(FPS);
+        InitializeBrickColors();
+        InitializeTiles();
+        InitializeLifeRects();
+        ParticleInit();
 
-    // InitializeLevels();
-    InitializeBrickColors();
-    InitializeTiles();
-    InitializeLifeRects();
-    ParticleInit();
+        if (GetRandomValue(0, 1))
+        {
+            ballSpeedX = -ballSpeedX;
+        }
+        emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
+    #else
 
-    ballAngle = randomFloat(ballMinAngle, ballMaxAngle);
-    if(GetRandomValue(0,1))
-    {
-        ballSpeedX = -ballSpeedX;
-    }
+        //* set Frames per second
+        const int FPS = 60;
+        SetTargetFPS(FPS);
 
-    target = LoadRenderTexture(WIDTH, HEIGHT);
+        // InitializeLevels();
+        InitializeBrickColors();
+        InitializeTiles();
+        InitializeLifeRects();
+        ParticleInit();
 
-    //* game loop
-    while (!WindowShouldClose())
-    {
-        UpdateDrawFrame();
-    }
+        ballAngle = randomFloat(ballMinAngle, ballMaxAngle);
+        if(GetRandomValue(0,1))
+        {
+            ballSpeedX = -ballSpeedX;
+        }
+
+        target = LoadRenderTexture(WIDTH, HEIGHT);
+
+        //* game loop
+        while (!WindowShouldClose())
+        {
+            UpdateDrawFrame();
+        }
+    #endif
 
     //* freeing up resources
     UnloadFont(font);
