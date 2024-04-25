@@ -833,6 +833,7 @@ bool CheckRectangleCollision(Vector2 rec1Pos, Vector2 rec1Size, Vector2 rec2Pos,
 
 bool UpdateInput()
 {
+    bool isDoubleTapped = false;
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !IsGestureDetected(GESTURE_DRAG)) {
         Vector2 currentTapPosition = GetMousePosition();
         int currentTime = GetTime();
@@ -845,14 +846,18 @@ bool UpdateInput()
             // (e.g., print message, trigger action)
             // lastTapTime = 0;
             std::cout << "Double tap detected!" << std::endl;
-            return true;
+            isDoubleTapped = true;
+            // return true;
         }
 
         lastTapTime = currentTime;
         lastTapPosition = currentTapPosition;
     }
 
-    return false;
+    if(isDoubleTapped)
+        return true;
+    else
+        return false;
 }
 
 
