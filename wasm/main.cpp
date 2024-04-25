@@ -833,7 +833,7 @@ bool CheckRectangleCollision(Vector2 rec1Pos, Vector2 rec1Size, Vector2 rec2Pos,
 
 bool UpdateInput()
 {
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !IsGestureDetected(GESTURE_DRAG)) {
         Vector2 currentTapPosition = GetMousePosition();
         int currentTime = GetTime();
         // int currentTime = GetFrameTime();
@@ -858,9 +858,6 @@ bool UpdateInput()
 
 void GameState()
 {
-
-    
-
 
     // bool touchStartGameInput = TouchStartGameInput();
     bool touchStartGameInput = UpdateInput();
