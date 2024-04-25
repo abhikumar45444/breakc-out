@@ -372,6 +372,9 @@ int gesture = GESTURE_NONE;
 const int DOUBLE_TAP_TIME_THRESHOLD = 1000; // Adjust as needed (milliseconds)
 float lastTapTime = 0.0;
 Vector2 lastTapPosition;
+bool isTapDown = false;
+float tapDownTime = 0.0f;
+
 
 //!  function declarations - starts
 void ScreenResized();
@@ -833,33 +836,74 @@ bool CheckRectangleCollision(Vector2 rec1Pos, Vector2 rec1Size, Vector2 rec2Pos,
 
 bool UpdateInput()
 {
+
     bool isDoubleTapped = false;
+
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !IsGestureDetected(GESTURE_DRAG)) {
-        Vector2 currentTapPosition = GetMousePosition();
-        // int currentTime = GetTime();
-        float currentTime = GetFrameTime();
-
-        // Check for tap within threshold time and close proximity
-        cout << currentTime << "     " << lastTapTime << "    " <<currentTime - lastTapTime <<endl;
-        if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD / 1000.0f &&
-            CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, currentTapPosition, Vector2{10, 10}))
-        {
-            // Double tap detected! Handle it here
-            // (e.g., print message, trigger action)
-            // lastTapTime = 0;
-            std::cout << "Double tap detected!" << std::endl;
-            isDoubleTapped = true;
-            // return true;
+        // Touch down
+        if (!isTapDown) {
+            isTapDown = true;
+            tapDownTime = GetFrameTime();
         }
-
-        lastTapTime = currentTime;
-        lastTapPosition = currentTapPosition;
+    } else if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+        // Touch up
+        if (isTapDown) {
+            float currentTime = GetFrameTime();
+            if (currentTime - tapDownTime < DOUBLE_TAP_TIME_THRESHOLD / 1000.0f) {
+                // Check for proximity (optional, using previous code)
+                if (CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, GetMousePosition(), Vector2{10, 10})) {
+                    // Double tap detected! Handle it here
+                    std::cout << "Double tap detected!" << std::endl;
+                    isDoubleTapped = true;
+                } else {
+                    // Single tap (optional handling)
+                    std::cout << "Single tap detected!" << std::endl;
+                }
+            }
+            isTapDown = false;
+        }
     }
 
-    if(isDoubleTapped)
+    // Update last tap position if a tap happened (optional)
+    if (isTapDown) {
+        lastTapPosition = GetMousePosition();
+    }
+
+    if(isDoubleTapped){
         return true;
+    }
     else
         return false;
+
+    // bool isDoubleTapped = false;
+    // if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !IsGestureDetected(GESTURE_DRAG)) {
+    //     Vector2 currentTapPosition = GetMousePosition();
+    //     // int currentTime = GetTime();
+    //     float currentTime = GetFrameTime();
+
+    //     // Check for tap within threshold time and close proximity
+    //     cout << currentTime << "     " << lastTapTime << "    " <<currentTime - lastTapTime <<endl;
+    //     if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD / 1000.0f &&
+    //         CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, currentTapPosition, Vector2{10, 10}))
+    //     {
+    //         // Double tap detected! Handle it here
+    //         // (e.g., print message, trigger action)
+    //         // lastTapTime = 0;
+    //         std::cout << "Double tap detected!" << std::endl;
+    //         isDoubleTapped = true;
+    //         // return true;
+    //     }
+
+    //     lastTapTime = currentTime;
+    //     lastTapPosition = currentTapPosition;
+    // }
+
+    // if(isDoubleTapped){
+    //     lastTapTime = 0.0f;
+    //     return true;
+    // }
+    // else
+    //     return false;
 }
 
 
