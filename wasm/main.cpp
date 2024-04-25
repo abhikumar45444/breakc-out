@@ -426,7 +426,7 @@ int main()
 {
     srand(time(0));
     // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    SetGesturesEnabled(GESTURE_DOUBLETAP | GESTURE_DRAG | GESTURE_TAP);
+    SetGesturesEnabled(GESTURE_DOUBLETAP | GESTURE_DRAG);
 
     //* Window initialization
     InitWindow(WIDTH, HEIGHT, TITLE);
@@ -517,12 +517,14 @@ bool TouchStartGameInput()
 {
     touchPosition = GetTouchPosition(0);
     bool touchStartGameInput = false;
-    gesture = GetGestureDetected();
+    // gesture = GetGestureDetected();
+    
 
     cout << "gesture: " << gesture << endl;
     cout << "touch pos x: " << touchPosition.x<<"    "<< "touch pos y: " << touchPosition.y << endl;
 
-    if (gesture == GESTURE_TAP && touchPosition.x > 0 && touchPosition.y > 0)
+    // if (gesture == GESTURE_TAP && touchPosition.x > 0 && touchPosition.y > 0)
+    if (IsGestureDetected(GESTURE_DOUBLETAP) && touchPosition.x > 0 && touchPosition.y > 0)
     {
         touchStartGameInput = touchPosition.x > 0 && touchPosition.x < WIDTH && touchPosition.y > 0 && touchPosition.y < HEIGHT;
     }
