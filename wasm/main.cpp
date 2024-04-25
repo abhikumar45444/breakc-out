@@ -369,7 +369,7 @@ vector<LevelTextStr> levelTextStr;
 RenderTexture2D target;
 Vector2 touchPosition = {-1, -1};
 int gesture = GESTURE_NONE;
-const int DOUBLE_TAP_TIME_THRESHOLD = 500; // Adjust as needed (milliseconds)
+const int DOUBLE_TAP_TIME_THRESHOLD = 1000; // Adjust as needed (milliseconds)
 int lastTapTime = 0;
 Vector2 lastTapPosition;
 
@@ -840,8 +840,10 @@ bool UpdateInput()
         // int currentTime = GetFrameTime();
 
         // Check for tap within threshold time and close proximity
-         if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD &&
-            CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, currentTapPosition, Vector2{10, 10})) {
+        cout << currentTime << "     " << lastTapTime << "    " <<currentTime - lastTapTime <<endl;
+        if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD &&
+            CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, currentTapPosition, Vector2{10, 10}))
+        {
             // Double tap detected! Handle it here
             // (e.g., print message, trigger action)
             // lastTapTime = 0;
