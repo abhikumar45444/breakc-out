@@ -432,7 +432,7 @@ int main()
 {
     srand(time(0));
     // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    SetGesturesEnabled(GESTURE_DOUBLETAP | GESTURE_DRAG);
+    SetGesturesEnabled(GESTURE_SWIPE_UP | GESTURE_SWIPE_DOWN | GESTURE_DRAG);
 
     //* Window initialization
     InitWindow(WIDTH, HEIGHT, TITLE);
@@ -524,15 +524,15 @@ bool TouchStartGameInput()
     touchPosition = GetTouchPosition(0);
     bool touchStartGameInput = false;
     gesture = GetGestureDetected();
-    bool doubleTapGestureDetected = IsGestureDetected(GESTURE_DOUBLETAP);
+    bool swipeUpGestureDetected = IsGestureDetected(GESTURE_SWIPE_UP);
     
 
     // cout << "gesture: " << gesture << endl;
-    // cout << "double tap gesture : " << (bool)doubleTapGestureDetected << endl;
+    // cout << "double tap gesture : " << (bool)swipeUpGestureDetected << endl;
     // cout << "touch pos x: " << touchPosition.x<<"    "<< "touch pos y: " << touchPosition.y << endl;
 
     // if (gesture == GESTURE_TAP && touchPosition.x > 0 && touchPosition.y > 0)
-    if (doubleTapGestureDetected /* && touchPosition.x > 0 && touchPosition.y > 0 */)
+    if (swipeUpGestureDetected /* && touchPosition.x > 0 && touchPosition.y > 0 */)
     {
         touchStartGameInput = touchPosition.x > 0 && touchPosition.x < WIDTH && touchPosition.y > 0 && touchPosition.y < HEIGHT;
     }
@@ -839,13 +839,13 @@ bool UpdateInput()
 
     bool isDoubleTapped = false;
 
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !IsGestureDetected(GESTURE_DRAG)) {
+    if (GetTouchPosition(0).x < 0  && !IsGestureDetected(GESTURE_DRAG)) {
         // Touch down
         if (!isTapDown) {
             isTapDown = true;
             tapDownTime = GetFrameTime();
         }
-    } else if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+    } else if (GetTouchPosition(0).x < 0  ) {
         // Touch up
         if (isTapDown) {
             float currentTime = GetFrameTime();
@@ -911,8 +911,8 @@ bool UpdateInput()
 void GameState()
 {
 
-    // bool touchStartGameInput = TouchStartGameInput();
-    bool touchStartGameInput = UpdateInput();
+    bool touchStartGameInput = TouchStartGameInput();
+    // bool touchStartGameInput = UpdateInput();
 
     if(gameStartedFirstTime)
     {
@@ -2081,8 +2081,8 @@ void UpdateDrawFrame(void)
             if(!fullAnimNotCompletedGO)
             {
                 GameOverScreen();
-                // bool touchStartGameInput = TouchStartGameInput();
-                bool touchStartGameInput = UpdateInput();
+                bool touchStartGameInput = TouchStartGameInput();
+                // bool touchStartGameInput = UpdateInput();
 
                 if (IsKeyPressed(KEY_ENTER) || touchStartGameInput)
                 {
@@ -2131,8 +2131,8 @@ void UpdateDrawFrame(void)
                 if(IsSoundPlaying(gameWonSound))
                     StopSound(gameWonSound);
                 GameWonScreen();
-                // bool touchStartGameInput = TouchStartGameInput();
-                bool touchStartGameInput = UpdateInput();
+                bool touchStartGameInput = TouchStartGameInput();
+                // bool touchStartGameInput = UpdateInput();
 
                 if (IsKeyPressed(KEY_ENTER) || touchStartGameInput)
                 {
