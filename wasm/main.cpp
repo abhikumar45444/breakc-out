@@ -370,7 +370,7 @@ RenderTexture2D target;
 Vector2 touchPosition = {-1, -1};
 int gesture = GESTURE_NONE;
 const int DOUBLE_TAP_TIME_THRESHOLD = 1000; // Adjust as needed (milliseconds)
-int lastTapTime = 0;
+float lastTapTime = 0.0;
 Vector2 lastTapPosition;
 
 //!  function declarations - starts
@@ -836,12 +836,12 @@ bool UpdateInput()
     bool isDoubleTapped = false;
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !IsGestureDetected(GESTURE_DRAG)) {
         Vector2 currentTapPosition = GetMousePosition();
-        int currentTime = GetTime();
-        // int currentTime = GetFrameTime();
+        // int currentTime = GetTime();
+        float currentTime = GetFrameTime();
 
         // Check for tap within threshold time and close proximity
         cout << currentTime << "     " << lastTapTime << "    " <<currentTime - lastTapTime <<endl;
-        if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD &&
+        if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD / 1000.0f &&
             CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, currentTapPosition, Vector2{10, 10}))
         {
             // Double tap detected! Handle it here
