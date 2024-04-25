@@ -517,14 +517,16 @@ bool TouchStartGameInput()
 {
     touchPosition = GetTouchPosition(0);
     bool touchStartGameInput = false;
-    // gesture = GetGestureDetected();
+    gesture = GetGestureDetected();
+    bool doubleTapGestureDetected = IsGestureDetected(GESTURE_DOUBLETAP);
     
 
     cout << "gesture: " << gesture << endl;
+    cout << "double tap gesture : " << (bool)doubleTapGestureDetected << endl;
     cout << "touch pos x: " << touchPosition.x<<"    "<< "touch pos y: " << touchPosition.y << endl;
 
     // if (gesture == GESTURE_TAP && touchPosition.x > 0 && touchPosition.y > 0)
-    if (IsGestureDetected(GESTURE_DOUBLETAP) && touchPosition.x > 0 && touchPosition.y > 0)
+    if (doubleTapGestureDetected && touchPosition.x > 0 && touchPosition.y > 0)
     {
         touchStartGameInput = touchPosition.x > 0 && touchPosition.x < WIDTH && touchPosition.y > 0 && touchPosition.y < HEIGHT;
     }
