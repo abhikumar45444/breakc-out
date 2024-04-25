@@ -835,8 +835,8 @@ bool UpdateInput()
 {
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
         Vector2 currentTapPosition = GetMousePosition();
-        // int currentTime = GetTime();
-        int currentTime = GetFrameTime();
+        int currentTime = GetTime();
+        // int currentTime = GetFrameTime();
 
         // Check for tap within threshold time and close proximity
          if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD &&
