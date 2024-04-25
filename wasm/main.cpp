@@ -831,27 +831,39 @@ bool CheckRectangleCollision(Vector2 rec1Pos, Vector2 rec1Size, Vector2 rec2Pos,
 }
 
 
-void GameState()
+bool UpdateInput()
 {
-
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
         Vector2 currentTapPosition = GetMousePosition();
-        int currentTime = GetTime();
+        // int currentTime = GetTime();
+        int currentTime = GetFrameTime();
 
         // Check for tap within threshold time and close proximity
          if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD &&
             CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, currentTapPosition, Vector2{10, 10})) {
             // Double tap detected! Handle it here
             // (e.g., print message, trigger action)
+            // lastTapTime = 0;
             std::cout << "Double tap detected!" << std::endl;
+            return true;
         }
 
         lastTapTime = currentTime;
         lastTapPosition = currentTapPosition;
     }
 
+    return false;
+}
 
-    bool touchStartGameInput = TouchStartGameInput();
+
+void GameState()
+{
+
+    
+
+
+    // bool touchStartGameInput = TouchStartGameInput();
+    bool touchStartGameInput = UpdateInput();
 
     if(gameStartedFirstTime)
     {
@@ -2020,7 +2032,8 @@ void UpdateDrawFrame(void)
             if(!fullAnimNotCompletedGO)
             {
                 GameOverScreen();
-                bool touchStartGameInput = TouchStartGameInput();
+                // bool touchStartGameInput = TouchStartGameInput();
+                bool touchStartGameInput = UpdateInput();
 
                 if (IsKeyPressed(KEY_ENTER) || touchStartGameInput)
                 {
@@ -2069,7 +2082,8 @@ void UpdateDrawFrame(void)
                 if(IsSoundPlaying(gameWonSound))
                     StopSound(gameWonSound);
                 GameWonScreen();
-                bool touchStartGameInput = TouchStartGameInput();
+                // bool touchStartGameInput = TouchStartGameInput();
+                bool touchStartGameInput = UpdateInput();
 
                 if (IsKeyPressed(KEY_ENTER) || touchStartGameInput)
                 {
