@@ -369,7 +369,7 @@ vector<LevelTextStr> levelTextStr;
 RenderTexture2D target;
 Vector2 touchPosition = {-1, -1};
 int gesture = GESTURE_NONE;
-const int DOUBLE_TAP_TIME_THRESHOLD = 1000; // Adjust as needed (milliseconds)
+const int DOUBLE_TAP_TIME_THRESHOLD = 3000; // Adjust as needed (milliseconds)
 float lastTapTime = 0.0;
 Vector2 lastTapPosition;
 bool isTapDown = false;
@@ -849,6 +849,7 @@ bool UpdateInput()
         // Touch up
         if (isTapDown) {
             float currentTime = GetFrameTime();
+        cout << currentTime << "     " << tapDownTime << "    " <<currentTime - tapDownTime <<endl;
             if (currentTime - tapDownTime < DOUBLE_TAP_TIME_THRESHOLD / 1000.0f) {
                 // Check for proximity (optional, using previous code)
                 if (CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, GetMousePosition(), Vector2{10, 10})) {
