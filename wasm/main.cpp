@@ -369,6 +369,9 @@ vector<LevelTextStr> levelTextStr;
 RenderTexture2D target;
 Vector2 touchPosition = {-1, -1};
 int gesture = GESTURE_NONE;
+const int DOUBLE_TAP_TIME_THRESHOLD = 500; // Adjust as needed (milliseconds)
+int lastTapTime = 0;
+Vector2 lastTapPosition;
 
 //!  function declarations - starts
 void ScreenResized();
@@ -521,12 +524,12 @@ bool TouchStartGameInput()
     bool doubleTapGestureDetected = IsGestureDetected(GESTURE_DOUBLETAP);
     
 
-    cout << "gesture: " << gesture << endl;
-    cout << "double tap gesture : " << (bool)doubleTapGestureDetected << endl;
-    cout << "touch pos x: " << touchPosition.x<<"    "<< "touch pos y: " << touchPosition.y << endl;
+    // cout << "gesture: " << gesture << endl;
+    // cout << "double tap gesture : " << (bool)doubleTapGestureDetected << endl;
+    // cout << "touch pos x: " << touchPosition.x<<"    "<< "touch pos y: " << touchPosition.y << endl;
 
     // if (gesture == GESTURE_TAP && touchPosition.x > 0 && touchPosition.y > 0)
-    if (doubleTapGestureDetected && touchPosition.x > 0 && touchPosition.y > 0)
+    if (doubleTapGestureDetected /* && touchPosition.x > 0 && touchPosition.y > 0 */)
     {
         touchStartGameInput = touchPosition.x > 0 && touchPosition.x < WIDTH && touchPosition.y > 0 && touchPosition.y < HEIGHT;
     }
@@ -811,8 +814,43 @@ void ResetGameState()
     gesture = GESTURE_NONE;
 }
 
+
+bool CheckRectangleCollision(Vector2 rec1Pos, Vector2 rec1Size, Vector2 rec2Pos, Vector2 rec2Size) {
+    float rec1Left = rec1Pos.x - rec1Size.x / 2.0f;
+    float rec1Right = rec1Pos.x + rec1Size.x / 2.0f;
+    float rec1Top = rec1Pos.y - rec1Size.y / 2.0f;
+    float rec1Bottom = rec1Pos.y + rec1Size.y / 2.0f;
+
+    float rec2Left = rec2Pos.x - rec2Size.x / 2.0f;
+    float rec2Right = rec2Pos.x + rec2Size.x / 2.0f;
+    float rec2Top = rec2Pos.y - rec2Size.y / 2.0f;
+    float rec2Bottom = rec2Pos.y + rec2Size.y / 2.0f;
+
+    return (rec1Left < rec2Right && rec1Right > rec2Left &&
+            rec1Top < rec2Bottom && rec1Bottom > rec2Top);
+}
+
+
 void GameState()
 {
+
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+        Vector2 currentTapPosition = GetMousePosition();
+        int currentTime = GetTime();
+
+        // Check for tap within threshold time and close proximity
+         if (currentTime - lastTapTime < DOUBLE_TAP_TIME_THRESHOLD &&
+            CheckRectangleCollision(lastTapPosition, Vector2{10, 10}, currentTapPosition, Vector2{10, 10})) {
+            // Double tap detected! Handle it here
+            // (e.g., print message, trigger action)
+            std::cout << "Double tap detected!" << std::endl;
+        }
+
+        lastTapTime = currentTime;
+        lastTapPosition = currentTapPosition;
+    }
+
+
     bool touchStartGameInput = TouchStartGameInput();
 
     if(gameStartedFirstTime)
